@@ -1,0 +1,78 @@
+Bài 1 : Tìm hi?u v? Web Component 
+ 1.Khái ni?m
+ Web component là t?p h?p các Web APIs cho phép chúng ta t?o ra m?t th? HTML riêng, mang các d?c tính riêng, dóng gói, có th? tái s? d?ng. Web component du?c xây d?ng trên chu?n web hi?n t?i, vì th? dang (và s?) có th? ho?t d?ng trên t?t c? các trình duy?t, có th? tuong thích v?i t?t c? các library và framework Javascript có th? làm vi?c v?i HTML. Ð? d? tu?ng tu?ng thì nó gi?ng nhu component c?a Angular hay React v?y, có di?u component này ph?m vi s? d?ng là trình duy?t luôn, ch? ko gói g?n ? ph?m vi framework n?a.
+2.Thành ph?n, công d?ng
+ Web Components bao g?m ba công ngh? riêng bi?t du?c s? d?ng cùng nhau:
+Custom Elements. Nói m?t cách don gi?n, dây là các thành ph?n HTML h?p l? v?i các template, behaviors và tag name tùy ch?nh (ví d?: <one-dialog> ) du?c t?o b?ng m?t b? API JavaScript. Các thành ph?n tùy ch?nh du?c mô t? trong custom-element.
+Shadow DOM. Có kh? nang cô l?p CSS và JavaScript, g?n gi?ng nhu <iframe> . Ði?u này du?c d?nh nghia trong shadow-trees .
+HTML templates. Các template do ngu?i dùng xác d?nh trong HTML không du?c hi?n th? cho d?n khi du?c g?i. Th? <template> du?c xác d?nh trong template-element .
+3.Công d?ng
+ _Custom elements
+Nhu tên ng? ý, custom elements là các thành ph?n HTML, nhu <div> , <section> ho?c <article> , nhung m?t cái gì dó chúng ta có th? t? d?t tên cho chúng, du?c xác d?nh thông qua API trình duy?t. Custom elements gi?ng nhu các ph?n t? HTML tiêu chu?n dó - tên trong ngo?c <> - ngo?i tr? chúng luôn có d?u g?ch ngang, nhu <news-slider> ho?c <bacon-cheeseburger>. Trong tuong lai, các nhà cung c?p trình duy?t dã cam k?t không t?o ra các y?u t? tích h?p m?i có ch?a d?u g?ch ngang trong tên d? ngan xung d?t.
+Custom elements t?n t?i ngoài framework c?a bên th? ba và các nhà cung c?p trình duy?t du?c dành riêng cho kh? nang tuong thích ngu?c liên t?c c?a thông s? k? thu?t, nhung d?m b?o r?ng các thành ph?n du?c vi?t theo thông s? k? thu?t s? không b? phá v? thay d?i API. Hon n?a, các thành ph?n này thu?ng có th? du?c s? d?ng ngoài lu?ng v?i các framework ph? bi?n nh?t hi?n nay , bao g?m Angular, React, Vue và các thành ph?n khác v?i n? l?c t?i thi?u.
+_Shadow DOM
+Shadow DOM là m?t phiên b?n dóng gói c?a DOM. Ði?u này cho phép các tác gi? cách ly hi?u qu? các do?n DOM v?i nhau, bao g?m m?i th? có th? du?c s? d?ng làm b? ch?n CSS và các ki?u du?c liên k?t v?i chúng. Nói chung, b?t k? n?i dung nào trong ph?m vi c?a tài li?u d?u du?c g?i là light DOM và b?t k? n?i dung nào trong shadow root d?u du?c g?i là shadow DOM.
+Khi s? d?ng light DOM, m?t ph?n t? có th? du?c ch?n b?ng cách s? d?ng document.querySelector('selector') ho?c b?ng cách nh?m vào ph?n t? con nào c?a ph?n t? b?t kì b?ng cách s? d?ng element.querySelector('selector') theo cách tuong t?, có th? nh?m m?c tiêu d?n các ph?n t? con c?a shadow root b?ng cách g?i shadowRoot.querySelector trong dó shadowRoot là tham chi?u d?n document fragment - s? khác bi?t là các ph?n t? con c?a shadow root s? không th? ch?n t? light DOM. Ví d?: N?u chúng ta có m?t shadow root v?i <button> bên trong nó, vi?c g?i shadowRoot.querySelector('button') s? tr? v? nút c?a chúng ta, nhung không có l?nh g?i b? ch?n truy v?n nào c?a tài li?u s? tr? v? ph?n t? dó vì nó thu?c v? m?t ph?n t? khác. Ví d? DocumentOrShadowRoot li?uOrShadowRoot. B? ch?n ki?u làm vi?c theo cùng m?t cách.
+V? m?t này, light DOM ho?t d?ng gi?ng nhu m?t <iframe> trong dó n?i dung b? c?t kh?i ph?n còn l?i c?a document; tuy nhiên, khi tôi t?o m?t shadow root, tôi v?n có toàn quy?n ki?m soát ph?n dó c?a trang c?a tôi, nhung n?m trong m?t b?i c?nh. Ðây là nh?ng gì chúng ta g?i là dóng gói .
+N?u b?n dã t?ng vi?t m?t thành ph?n s? d?ng l?i cùng m?t id ho?c d?a trên các công c? CSS-in-JS ho?c chi?n lu?c d?t tên CSS ( nhu BEM ), thì Shadow DOM có kh? nang c?i thi?n tr?i nghi?m nhà phát tri?n c?a b?n.
+Hãy tu?ng tu?ng k?ch b?n sau:
+<div>
+  <div id="example">
+    <!-- Pseudo-code used to designate a shadow root -->
+    <#shadow-root>
+      <style>
+      button {
+        background: tomato;
+        color: white;
+      }
+      </style>
+      <button id="button">This will use the CSS background tomato</button>
+    </#shadow-root>
+  </div>
+  <button id="button">Not tomato</button>
+</div>
+Ngoài pseudo-code c?a <#shadow-root> (du?c s? d?ng ? dây d? phân d?nh ranh gi?i bóng không có ph?n t? HTML), HTML hoàn toàn h?p l?. Ð? dính kèm m?t shadow root vào nút ? trên, chúng ta s? ch?y m?t cái gì dó nhu:
+const shadowRoot = document.getElementById('example').attachShadow({ mode: 'open' });
+shadowRoot.innerHTML = `<style>
+button {
+  color: tomato;
+}
+</style>
+<button id="button">This will use the CSS color tomato <slot></slot></button>`;
+M?t shadow root cung có th? bao g?m n?i dung t? document ch?a nó b?ng cách s? d?ng ph?n t? <slot> . S? d?ng m?t v? trí s? th? n?i dung ngu?i dùng t? document bên ngoài t?i m?t v? trí du?c ch? d?nh trong thu m?c g?c c?a b?n.
+_HTML templates
+Ph?n t? <template> du?c d?t tên khéo léo cho phép chúng tôi d?p t?t các m?u mã có th? s? d?ng l?i bên trong m?t lu?ng HTML thông thu?ng s? không du?c hi?n th? ngay l?p t?c, nhung có th? du?c s? d?ng sau dó.
+<template id="book-template">
+  <li><span class="title"></span> &mdash; <span class="author"></span></li>
+</template>
+
+<ul id="books"></ul>
+Ví d? trên s? không hi?n th? b?t k? n?i dung nào cho d?n khi t?p l?nh dã s? d?ng m?u, kh?i t?o mã và cho trình duy?t bi?t ph?i làm gì v?i nó.
+const fragment = document.getElementById('book-template');
+const books = [
+  { title: 'The Great Gatsby', author: 'F. Scott Fitzgerald' },
+  { title: 'A Farewell to Arms', author: 'Ernest Hemingway' },
+  { title: 'Catch 22', author: 'Joseph Heller' }
+];
+
+books.forEach(book => {
+  // Create an instance of the template content
+  const instance = document.importNode(fragment.content, true);
+  // Add relevant content to the template
+  instance.querySelector('.title').innerHTML = book.title;
+  instance.querySelector('.author').innerHTML = book.author;
+  // Append the instance ot the DOM
+  document.getElementById('books').appendChild(instance);
+});
+Luu ý r?ng ví d? này t?o m?t m?u ( `<template id="book-template">` ) mà không c?n b?t k? công ngh? Web Components nào khác, minh h?a l?i r?ng ba công ngh? trong danh sách ? d?u bài vi?t có th? du?c s? d?ng d?c l?p ho?c t?p th?.
+Rõ ràng, ngu?i dùng c?a m?t d?ch v? s? d?ng API m?u có th? vi?t m?t m?u có b?t k? hình d?ng ho?c c?u trúc nào có th? du?c t?o sau dó. M?t trang khác trên m?t trang web có th? s? d?ng cùng m?t d?ch v?, nhung c?u trúc m?u theo cách này:
+<template id="book-template">
+  <li><span class="author"></span>'s classic novel <span class="title"></span></li>
+</template>
+
+<ul id="books"></ul>
+
+
+
+
+ 
